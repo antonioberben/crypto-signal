@@ -1,0 +1,28 @@
+//@version=4
+study("custom_emas", overlay=true, resolution="")
+
+ema55 = security(syminfo.tickerid, '60', ema(close, 55))
+ema34 = security(syminfo.tickerid, '15', ema(close, 34))
+ema14 = security(syminfo.tickerid, '15', ema(close, 14))
+ema14s = ema(close, 14)
+
+// EMAs
+plot( ema55, color=#ffb233, style=plot.style_line, title="1hEMA55", linewidth=1)
+plot( ema34, color=#bf7700, style=plot.style_line, title="15mEMA34", linewidth=1)
+plot( ema14, color=#bf7700, style=plot.style_line, title="15minEMA14", linewidth=1)
+plot( ema14s, color=color.blue, style=plot.style_line, title="EMA14", linewidth=2)
+
+
+// Bollinger bands
+length = input(20, minval=1)
+src = input(close, title="Source")
+mult = input(2.0, minval=0.001, maxval=50, title="StdDev")
+basis = sma(src, length)
+dev = mult * stdev(src, length)
+upper = basis + dev
+lower = basis - dev
+offset = input(0, "Offset", type = input.integer, minval = -500, maxval = 500)
+plot(basis, "Basis", color=#872323, offset = offset, linewidth=1, transp=50)
+p1 = plot(upper, "Upper", color=color.teal, offset = offset, linewidth=1, transp=50)
+p2 = plot(lower, "Lower", color=color.teal, offset = offset, linewidth=1, transp=50)
+fill(p1, p2, title = "Background", color=#198787, transp=99)
